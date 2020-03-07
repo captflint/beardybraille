@@ -1,3 +1,10 @@
+errors = {
+        0: 'No errors',
+        1: 'Invalid index',
+        2: 'No more room in line',
+        3: 'Index must be an int',
+        }
+
 bascii = " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)="
 
 class braillecell:
@@ -54,3 +61,57 @@ class braillecell:
 
     def ascii(self):
         return bascii[self.brailleint]
+
+class brailleline:
+
+    def __init__(self, value, width=40):
+        if type(width) != int:
+            raise TypeError
+        if width <= 0:
+            raise ValueError
+        self.width = width
+        if type(value) != str:
+            raise TypeError
+        if len(value) > width:
+            raise ValueError
+        self.content = []
+        for cell in value:
+            self.content.append(braillecell(cell))
+
+    def validateindex(self, i):
+        if type(i) != int:
+            return 3
+        if len(self.content) >= self.width:
+            return 2
+        if i < 0:
+            return 1
+        return 0
+
+    def insert(self, i, value):
+        if error := self.validateindex(i):
+            return error
+        if i > len(self.content):
+            return 1
+        self.content.insert(i, braillecell(value))
+        return 0
+
+    def delete(self, i):
+        if error := self.validateindex(i):
+            return error
+        del self.content[i]
+        return 0
+
+    def __str__(self):
+        rstr = ''
+        for cell in self.content:
+            rstr += str(cell)
+        return rstr
+
+    def ascii(self):
+        rstr = ''
+        for cell in self.content:
+            rstr += cell.ascii()
+        return rstr
+
+    def __repr__(self):
+        return f'a braile line of width {self.width} containing {len(self.content)} braille cells.'
