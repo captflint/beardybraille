@@ -6,7 +6,7 @@ function BrailleCell(value) {
 	this.ascii = function() {
 		return bascii[this.value];
 	}
-	
+
 	this.braille = function() {
 		return String.fromCodePoint(0x2800 + this.value);
 	}
@@ -68,3 +68,41 @@ function BrailleCell(value) {
 		throw "Invalid input";
 	}
 };
+
+function BrailleLine(content, width) {
+	this.content = [];
+
+	if (typeof(width) === "number") {
+		if (Number.isInteger(width)){
+			if (width < 1) {
+				throw "width must be positive";
+			} else {
+				this.width = width
+			}
+		} else {
+			throw "width must be an int";
+		}
+	} else {
+		throw "width must be an int";
+	}
+
+	for (const cell in content) {
+		this.content.push(new BrailleCell(cell));
+	}
+
+	this.toAscii = function() {
+		let rstr = "";
+		for (const cell in this.content) {
+			rstr += cell.ascii();
+		}
+		return rstr;
+	}
+
+	this.toBraille = function() {
+		let rstr = "";
+		for (const cell in this.content) {
+			rstr += cell.braille();
+		}
+		return rstr;
+	}
+}
