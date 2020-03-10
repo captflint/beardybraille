@@ -76,8 +76,10 @@ BrailleCell.prototype.braille = function() {
 }
 
 
+// BrailleLine constructor function
+
 function BrailleLine(content, width) {
-  this.content = [];
+  this.content = []; // an array of BrailleCell objects
 
   if (typeof(width) === "number") {
     if (Number.isInteger(width)) {
@@ -105,19 +107,22 @@ function BrailleLine(content, width) {
     this.content.push(new BrailleCell(cell));
   }
 
-  this.toAscii = function() {
-    let rstr = "";
-    for (const cell of this.content) {
-      rstr += cell.ascii();
-    }
-    return rstr;
-  }
+}
 
-  this.toBraille = function() {
-    let rstr = "";
-    for (const cell of this.content) {
-      rstr += cell.braille();
-    }
-    return rstr;
+// BrailleLine method definitions.
+
+BrailleLine.prototype.ascii = function() {
+  let rstr = "";
+  for (const cell of this.content) {
+    rstr += cell.ascii();
   }
+  return rstr;
+}
+
+BrailleLine.prototype.braille = function() {
+  let rstr = "";
+  for (const cell of this.content) {
+    rstr += cell.braille();
+  }
+  return rstr;
 }
