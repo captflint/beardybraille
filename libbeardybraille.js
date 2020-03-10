@@ -1,41 +1,37 @@
+'use scrict';
+
+// BraileCell constructor
+
 function BrailleCell(value) {
 
-  const bascii = " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=";
-  this.value = 0;
+  this.value; // must be int n; 0 <= n < 64
+  let bascii = " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=";
 
-  this.ascii = function() {
-    return bascii[this.value];
-  }
-
-  this.braille = function() {
-    return String.fromCodePoint(0x2800 + this.value);
-  }
-
-  this.setFromArray = function(a) {
+  setFromArray = function(a) {
     let sum = 0;
     for (let i = 1; i <= 6; i++) {
       if (a.includes(i)) {
         sum += 2 ** (i - 1);
       }
     }
-    this.value = sum;
+    return sum;
   }
 
-  this.setFromAscii = function(value) {
+  setFromAscii = function(value) {
     if (bascii.includes(value)) {
-      this.value = bascii.indexOf(value);
+      return bascii.indexOf(value);
     } else {
       throw "Invalid character";
     }
   }
 
-  this.setFromUnicode = function(value) {
+  setFromUnicode = function(value) {
     let bunicode = "";
     for (let i = 0; i < 64; i++) {
       bunicode += String.fromCodePoint(0x2800 + i);
     }
     if (bunicode.includes(value)) {
-      this.value = bunicode.indexOf(value);
+      return bunicode.indexOf(value);
     } else {
       throw "Invalid character";
     }
@@ -53,13 +49,13 @@ function BrailleCell(value) {
     }
     this.value = value;
   } else if (Array.isArray(value)) {
-    this.setFromArray(value);
+    this.value = setFromArray(value);
   } else if (typeof(value) === "string") {
     if (value.length === 1) {
       if (value.charCodeAt(0) < 128) {
-        this.setFromAscii(value);
+        this.value = setFromAscii(value);
       } else {
-        this.setFromUnicode(value);
+        this.value = setFromUnicode(value);
       }
     } else {
       throw "String must contain only a single character";
@@ -68,6 +64,17 @@ function BrailleCell(value) {
     throw "Invalid input";
   }
 };
+
+// BrailleCell method definitions
+
+BrailleCell.prototype.ascii = function() {
+  return " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)="[this.value];
+}
+
+BrailleCell.prototype.braille = function() {
+  return String.fromCodePoint(0x2800 + this.value);
+}
+
 
 function BrailleLine(content, width) {
   this.content = [];
