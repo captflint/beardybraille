@@ -126,3 +126,7 @@ BrailleLine.prototype.braille = function() {
   }
   return rstr;
 }
+
+BrailleLine.prototype.append = function(value) {
+  this.content.push(new BrailleCell(value));
+}
